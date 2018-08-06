@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.woniu.supmans.dao.staff.SoldMapper">
+  <resultMap id="BaseResultMap" type="com.woniu.supmans.bean.staff.Sold">
+    <id column="soldID" jdbcType="INTEGER" property="soldid" />
+    <result column="soldnID" jdbcType="INTEGER" property="soldnid" />
+    <result column="soldnumber" jdbcType="VARCHAR" property="soldnumber" />
+    <result column="soldprice" jdbcType="VARCHAR" property="soldprice" />
+    <result column="soldtID" jdbcType="INTEGER" property="soldtid" />
+  </resultMap>
+  <resultMap id="BaseResultMapWithMerch" type="com.woniu.supmans.bean.staff.Sold">
+    <id column="soldID" jdbcType="INTEGER" property="soldid" />
+    <result column="soldnID" jdbcType="INTEGER" property="soldnid" />
+    <result column="soldnumber" jdbcType="VARCHAR" property="soldnumber" />
+    <result column="soldprice" jdbcType="VARCHAR" property="soldprice" />
+    <result column="soldtID" jdbcType="INTEGER" property="soldtid" />
+    <association property="merch" javaType="com.woniu.supmans.bean.staff.Merch">
+      <id column="merchID" property="merchid"/>
+      <result column="merchname" property="merchname"/>
+      <result column="merchaddress" property="merchaddress"/>
+      <result column="merchPD" property="merchpd"/>
+      <result column="merchGP" property="merchgp"/>
+      <result column="merchprice" property="merchprice"/>
+      <result column="merchtype" property="merchtype"/>
+      <result column="merchnumber" property="merchnumber"></result>
+    </association>
+    <!-- 指定联合查询出的类型字段的封装 -->
+    <association property="type" javaType="com.woniu.supmans.bean.staff.Type">
+      <id column="typeID" property="typeid"/>
+      <result column="typename" property="typename"/>
+    </association>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    soldID, soldnID, soldnumber, soldprice, soldtID
+  </sql>
+  <sql id="Base_Column_List_Merch">
+    s.soldID, s.soldnID, s.soldnumber, s.soldprice, s.soldtID, m.merchID, m.merchname, m.merchaddress, m.merchPD, m.merchGP, m.merchprice, m.merchtype, m.merchnumber, t.typeID, t.typename
+  </sql>
+  <select id="selectByExampleWithMerch" parameterType="com.woniu.supmans.bean.staff.SoldExample" resultMap="BaseResultMapWithMerch">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List_Merch" />
+    from sold as s LEFT JOIN merch as m ON s.soldnID = m.merchID
+    LEFT JOIN type as t ON s.soldtID = t.typeID
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    order by s.soldnID
+    <!--<if test="orderByClause != null">-->
+    <!--order by ${orderByClause}-->
+    <!--</if>-->
+  </select>
+  <select id="selectByExample" parameterType="com.woniu.supmans.bean.staff.SoldExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sold
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sold
+    where soldID = #{soldid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sold
+    where soldID = #{soldid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.woniu.supmans.bean.staff.SoldExample">
+    delete from sold
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.woniu.supmans.bean.staff.Sold">
+    insert into sold (soldID, soldnID, soldnumber, 
+      soldprice, soldtID)
+    values (#{soldid,jdbcType=INTEGER}, #{soldnid,jdbcType=INTEGER}, #{soldnumber,jdbcType=VARCHAR}, 
+      #{soldprice,jdbcType=VARCHAR}, #{soldtid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.woniu.supmans.bean.staff.Sold">
+    insert into sold
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="soldid != null">
+        soldID,
+      </if>
+      <if test="soldnid != null">
+        soldnID,
+      </if>
+      <if test="soldnumber != null">
+        soldnumber,
+      </if>
+      <if test="soldprice != null">
+        soldprice,
+      </if>
+      <if test="soldtid != null">
+        soldtID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="soldid != null">
+        #{soldid,jdbcType=INTEGER},
+      </if>
+      <if test="soldnid != null">
+        #{soldnid,jdbcType=INTEGER},
+      </if>
+      <if test="soldnumber != null">
+        #{soldnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="soldprice != null">
+        #{soldprice,jdbcType=VARCHAR},
+      </if>
+      <if test="soldtid != null">
+        #{soldtid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.woniu.supmans.bean.staff.SoldExample" resultType="java.lang.Long">
+    select count(*) from sold
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update sold
+    <set>
+      <if test="record.soldid != null">
+        soldID = #{record.soldid,jdbcType=INTEGER},
+      </if>
+      <if test="record.soldnid != null">
+        soldnID = #{record.soldnid,jdbcType=INTEGER},
+      </if>
+      <if test="record.soldnumber != null">
+        soldnumber = #{record.soldnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.soldprice != null">
+        soldprice = #{record.soldprice,jdbcType=VARCHAR},
+      </if>
+      <if test="record.soldtid != null">
+        soldtID = #{record.soldtid,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update sold
+    set soldID = #{record.soldid,jdbcType=INTEGER},
+      soldnID = #{record.soldnid,jdbcType=INTEGER},
+      soldnumber = #{record.soldnumber,jdbcType=VARCHAR},
+      soldprice = #{record.soldprice,jdbcType=VARCHAR},
+      soldtID = #{record.soldtid,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.woniu.supmans.bean.staff.Sold">
+    update sold
+    <set>
+      <if test="soldnid != null">
+        soldnID = #{soldnid,jdbcType=INTEGER},
+      </if>
+      <if test="soldnumber != null">
+        soldnumber = #{soldnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="soldprice != null">
+        soldprice = #{soldprice,jdbcType=VARCHAR},
+      </if>
+      <if test="soldtid != null">
+        soldtID = #{soldtid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where soldID = #{soldid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.woniu.supmans.bean.staff.Sold">
+    update sold
+    set soldnID = #{soldnid,jdbcType=INTEGER},
+      soldnumber = #{soldnumber,jdbcType=VARCHAR},
+      soldprice = #{soldprice,jdbcType=VARCHAR},
+      soldtID = #{soldtid,jdbcType=INTEGER}
+    where soldID = #{soldid,jdbcType=INTEGER}
+  </update>
+</mapper>

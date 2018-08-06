@@ -1,0 +1,17 @@
+.unnav{
+	width: 84%;
+	height: 100%;
+	float: left;
+	background: #1db0b8;
+	transition: all .3s;
+}
+
+.unnav-mini{
+	width: 95.5%;
+	transition: all .3s;
+}
+
+p{
+	color: white;
+	text-indent: 2em;
+}
