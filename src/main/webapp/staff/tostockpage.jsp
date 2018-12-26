@@ -14,6 +14,6 @@
     <script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-<jsp:forward page="/staff/stockinfo"></jsp:forward>
+<jsp:forward page="/staff/stockinfo-a"></jsp:forward>
 </body>
 </html>

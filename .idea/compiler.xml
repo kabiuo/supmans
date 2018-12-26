@@ -9,5 +9,8 @@
         <module name="supmans" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="supmans" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
